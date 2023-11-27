@@ -1,0 +1,86 @@
+{
+  "services": [
+    {
+      "name": "Combo Commercial Film",
+      "imgUrl": "https://dulichviet.com.vn/images/bandidau/mua-thu-nay-den-du-lich-thai-lan-thoi-tiet-ra-sao-va-co-dieu-gi-thu-vi.jpg",
+      "count": "345"
+    },
+    {
+      "name": "Studio Photography",
+      "imgUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_Ul0irlk6RRYrB4qm7OrIVxzZDQBakunQ2w&usqp=CAU",
+      "count": "290"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Sunrise in Venice",
+      "imgUrl": "https://genk.mediacdn.vn/2016/the-shawshank-redemption1-1474530780078.jpg",
+      "reviewCount": "152",
+      "rating": "4.5",
+      "casting": "John Doe as Marco, Jane Smith as Lucia"
+    },
+    {
+      "name": "Midnight Mystery",
+      "imgUrl": "https://play-lh.googleusercontent.com/_uxFUYjyIdoDMNNW1d1tkCdFPXurJq5lz3Bf29mrlUebJPHxAPYxpQCsugWdj8cRn9oR",
+      "reviewCount": "200",
+      "rating": "4.7",
+      "casting": "Alice Brown as Detective Ray, Tom Wilson as Mr. Smith"
+    },
+    {
+      "name": "Journey Through Time",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "350",
+      "rating": "4.8",
+      "casting": "Chris Green as Tim, Emma Stone as Lily"
+    },
+    {
+      "name": "Lost in the Wild",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "275",
+      "rating": "4.6",
+      "casting": "Gary Jones as Dr. Alan, Sarah Young as Sarah"
+    },
+    {
+      "name": "The Last Wizard",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "412",
+      "rating": "4.9",
+      "casting": "Michael Ray as Merlin, Lily Evans as Elara"
+    },
+    {
+      "name": "Ocean's Whisper",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "178",
+      "rating": "4.2",
+      "casting": "Olivia Park as Mia, Daniel Lee as Jack"
+    },
+    {
+      "name": "Echoes of the Past",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "215",
+      "rating": "4.3",
+      "casting": "Sophia Loren as Anna, Mark Tailor as John"
+    },
+    {
+      "name": "Futurescape",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "333",
+      "rating": "4.4",
+      "casting": "Ryan Gosling as Max, Rachel McAdams as Ava"
+    },
+    {
+      "name": "Alien Encounter",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "289",
+      "rating": "4.5",
+      "casting": "Henry Cavill as Captain Leo, Amber Heard as Dr. Zoe"
+    },
+    {
+      "name": "Secrets of the Castle",
+      "imgUrl": "https://www.galaxycine.vn/media/2022/11/28/hdmmdc-02-a19_1669618098652.jpg",
+      "reviewCount": "157",
+      "rating": "4.3",
+      "casting": "Emma Watson as Lady Elise, Tom Hardy as Sir Gareth"
+    }
+  ]
+}
