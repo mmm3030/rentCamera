@@ -10,11 +10,14 @@ import 'package:http/http.dart' as http;
 class EquipmentController extends GetxController {
   late Rx<List<CategoryModel>> categories = Rx([]);
 
+  late Rx<Map<CategoryModel, List<ProductModel>>> mapData = Rx({});
+
   void init() {
     fetchListCategory();
   }
 
   Future<void> fetchListCategory() async {
+    mapData = Rx({});
     var prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     final response = await http.get(
@@ -23,17 +26,15 @@ class EquipmentController extends GetxController {
     );
     if (response.statusCode == 200) {
       List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
-      List<CategoryModel> categoryList = [];
       for (var p in result) {
         CategoryModel category = CategoryModel.fromJson(p);
-        categoryList.add(category);
+        mapData.value[category] = await getProductsByCategory(category.id!);
       }
-      categories(categoryList);
     } else {}
     update();
   }
 
-  Future<List<ProductModel>> getProductByCategory(int id) async {
+  Future<List<ProductModel>> getProductsByCategory(int id) async {
     late List<ProductModel> products = [];
     var prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -44,12 +45,10 @@ class EquipmentController extends GetxController {
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> data = result['contends'];
-      List<ProductModel> productList = [];
       for (var p in data) {
         ProductModel product = ProductModel.fromJson(p);
-        productList.add(product);
+        products.add(product);
       }
-      products = productList;
     } else {}
     update();
     return products;
