@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
@@ -26,8 +25,10 @@ class ForgotPasswordController extends GetxController {
               "email": email.text,
             }));
     if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       Utils.toast('Notification', 'Check your email to get Opt code!');
-      Get.toNamed(Routes.FORGOTOPT, arguments: {'email': email.text});
+      Get.toNamed(Routes.FORGOTOPT,
+          arguments: {'email': email.text, 'code': result['code']});
     } else {
       Utils.toast(
           'Notification', 'Email not found or your email does not confirmed!');

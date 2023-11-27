@@ -17,6 +17,7 @@ class NewPasswordView extends GetView<NewPassWordController> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -58,7 +59,7 @@ class NewPasswordView extends GetView<NewPassWordController> {
               ),
               InputText.child(
                   text: 'Confirm Password',
-                  controller: controller.passwordController,
+                  controller: controller.confirmPasswordController,
                   hintT: 're-enter Password'),
             ],
           ),
@@ -81,7 +82,8 @@ class NewPasswordView extends GetView<NewPassWordController> {
                       AppColors.bottomButtonColor.withOpacity(0.76),
                   onTap: () {
                     controller.resetPassword();
-                  }),            ],
+                  }),
+            ],
           ),
         ],
       ),

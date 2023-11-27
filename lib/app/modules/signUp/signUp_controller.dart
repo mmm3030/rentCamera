@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rent_camera/app/core/values/app_colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:rent_camera/app/core/utils/constants.dart';
 import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';

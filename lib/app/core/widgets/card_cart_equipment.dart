@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rent_camera/app/core/utils/index.dart';
-import 'package:rent_camera/app/core/utils/number_utils.dart';
 import 'package:rent_camera/app/core/values/app_colors.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
+import 'package:rent_camera/app/models/product_model.dart';
 
 abstract class CardCartEquipment {
   static Widget child({
+    required ProductModel productModel,
     required Function() onTap,
   }) {
-    return _cardCartEquipment(onTap);
+    return _cardCartEquipment(onTap, productModel);
   }
 
-  static Widget _cardCartEquipment(Function() onTap) {
+  static Widget _cardCartEquipment(
+      Function() onTap, ProductModel productModel) {
     return InkWell(
         onTap: onTap,
         child: Container(
@@ -42,7 +43,7 @@ abstract class CardCartEquipment {
                     ),
                     child: Image.network(
                         fit: BoxFit.fitHeight,
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Black.png/220px-Black.png'),
+                        productModel.images!.first.imageUrl.toString()),
                   ),
                 ),
                 Container(
@@ -55,15 +56,16 @@ abstract class CardCartEquipment {
                       SizedBox(
                           width: 150.w,
                           child: Text(
-                            'Canon EOS C300 Mark III Film camera rental',
+                            productModel.name!,
                             style: TextStyle(
                                 fontSize: 14.sp,
                                 color: const Color(0xFF7D7F88),
                                 fontWeight: FontWeights.medium),
                           )),
-                      const Text(
-                        "\u00242,500,000 (-\u00244.000.000 Tax)",
-                        style: TextStyle(color: Color(0xFF7D7F88)),
+                      Text(
+                        "\u0024${productModel.amount} ",
+                        //(-\u00244.000.000 Tax)
+                        style: const TextStyle(color: Color(0xFF7D7F88)),
                       ),
                       Row(
                         children: [

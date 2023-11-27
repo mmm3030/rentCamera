@@ -12,50 +12,47 @@ class EquipmentView extends GetView<EquipmentController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Obx(
-          () => Column(
-            children: [
-              for (var i = 0;
-                  i < controller.mapData.value.keys.toList().length;
-                  i++)
-                Column(
-                  children: [
-                    TitleCategory.child(
-                        text: controller.mapData.value.keys.toList()[i].name!,
-                        onPress: () {}),
-                    Container(
-                      height: 190.h,
-                      width: 350.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 10.0,
-                          )
-                        ],
-                      ),
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: controller.mapData.value.values
-                              .toList()[i]
-                              .length,
-                          itemBuilder: (context, index) {
-                            return CardEquipment.child(
-                                productModel: controller.mapData.value.values
-                                    .toList()[i][index],
-                                onTap: () {});
-                          }),
+          child: Obx(
+        () => Column(
+          children: [
+            for (var i = 0;
+                i < controller.mapData.value.keys.toList().length;
+                i++)
+              Column(
+                children: [
+                  TitleCategory.child(
+                      text: controller.mapData.value.keys.toList()[i].name!,
+                      onPress: () {}),
+                  Container(
+                    height: 220.h,
+                    width: 350.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                  ],
-                ),
-              SizedBox(
-                height: 40.h,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            controller.mapData.value.values.toList()[i].length,
+                        itemBuilder: (context, index) {
+                          return CardEquipment.child(
+                              productModel: controller.mapData.value.values
+                                  .toList()[i][index],
+                              onTap: () {
+                                controller.cartController.openDetailProduct(
+                                    context,
+                                    controller.mapData.value.values.toList()[i]
+                                        [index]);
+                              });
+                        }),
+                  ),
+                ],
               ),
-            ],
-          ),
+            SizedBox(
+              height: 40.h,
+            ),
+          ],
         ),
-      ),
+      )),
     );
   }
 }

@@ -1,15 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
+import 'package:rent_camera/app/core/utils/constants.dart';
 import 'package:rent_camera/app/core/utils/date_time_utils.dart';
+import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
 import 'package:rent_camera/app/core/widgets/card_equipment.dart';
 import 'package:rent_camera/app/core/widgets/rent_button.dart';
+import 'package:rent_camera/app/models/cart_model.dart';
+import 'package:rent_camera/app/models/product_model.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartController extends GetxController {
+  late Rx<List<CartModel>> carts = Rx([]);
+  
   var count = 1.obs;
   var dateStart = ''.obs;
   var dateEnd = ''.obs;
@@ -22,6 +32,27 @@ class CartController extends GetxController {
       return;
     }
     count--;
+  }
+
+  Future<void> fetchListProduct() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse("${Constants.baseUrl}/Users/CartItems"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+      List<CartModel> cartList = [];
+      for (var p in result) {
+        CartModel cart = CartModel.fromJson(p);
+        cartList.add(cart);
+      }
+      carts(cartList);
+    } else {
+      Utils.handleError401();
+    }
+    update();
   }
 
   Future<void> showDate(BuildContext context) async {
@@ -47,10 +78,10 @@ class CartController extends GetxController {
   }
 
   void checkOut() {
-    Get.toNamed(Routes.CHECKOUT);
+    // Get.toNamed(Routes.CHECKOUT);
   }
 
-  void openDetailProduct(BuildContext context) {
+  void openDetailProduct(BuildContext context, ProductModel productModel) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -71,13 +102,12 @@ class CartController extends GetxController {
                   SizedBox(
                     height: 20.h,
                   ),
-                  Container(
-                    
+                  Container(),
+                  CardEquipment.child(
+                    isNoBorder: true,
+                    productModel: productModel,
+                    onTap: () {},
                   ),
-                  // CardEquipment.child(
-                  //   isNoBorder: true,
-                  //   onTap: () {},
-                  // ),
                   SizedBox(
                     height: 10.h,
                   ),
@@ -164,8 +194,7 @@ class CartController extends GetxController {
                                 fontSize: 15.sp),
                           ),
                         ),
-                        ReadMoreText(
-                            'Flutter is Google’s mobile UI open source framework to build high-quality native (super fast) interfaces for iOS and Android apps with the unified codebase.',
+                        ReadMoreText(productModel.description!,
                             trimLines: 3,
                             colorClickableText: Colors.black,
                             trimMode: TrimMode.Line,

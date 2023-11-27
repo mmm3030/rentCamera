@@ -20,7 +20,7 @@ abstract class CardEquipment {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         height: 190.h,
         width: 310.w,
         decoration: BoxDecoration(
@@ -117,8 +117,8 @@ abstract class CardEquipment {
                   bottomLeft: Radius.circular(10.r),
                 ),
                 child: Image.network(
-                    fit: BoxFit.fitHeight,
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Black.png/220px-Black.png'),
+                    fit: BoxFit.fitWidth,
+                    productModel.images!.first.imageUrl.toString()),
               ),
             ),
             Column(
@@ -129,28 +129,28 @@ abstract class CardEquipment {
                   children: [
                     iconTitle(
                       Icons.star_rate_rounded,
-                      '4.8',
+                      '${productModel.averageRating.toDouble()}',
                       false,
                       AppColors.starColor,
                     ),
-                    const Text(
-                      ' (73)',
-                      style: TextStyle(color: AppColors.navGray),
+                    Text(
+                      ' (${productModel.totalReviews})',
+                      style: const TextStyle(color: AppColors.navGray),
                     ),
                   ],
                 ),
                 SizedBox(
                     width: 170.w,
                     child: Text(
-                      Utils.truncateString(
-                          'Canon EOS C300 Mark III Film camera rental', 45),
+                      Utils.truncateString(productModel.name.toString(), 45),
                       style:
                           TextStyle(color: AppColors.navGray, fontSize: 15.sp),
                     )),
-                iconTitle(Icons.bed, '2 equipment', false, Colors.black),
-                iconTitle(Icons.bed, 'Add to card', true, Colors.black),
-                iconTitle(Icons.attach_money_outlined, NumberUtils.vnd(2500000),
+                iconTitle(Icons.bed, '${productModel.unitsInStock} equipment',
                     false, Colors.black),
+                iconTitle(Icons.bed, 'Add to card', true, Colors.black),
+                iconTitle(Icons.attach_money_outlined,
+                    NumberUtils.vnd(productModel.amount), false, Colors.black),
               ],
             ),
             Container(

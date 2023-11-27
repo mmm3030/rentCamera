@@ -18,29 +18,31 @@ class HomeView extends GetView<HomeController> {
           children: [
             TitleCategory.child(text: 'Equipment Rental', onPress: () {}),
             Container(
-              height: 190.h,
-              width: 350.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10.0,
-                  )
-                ],
-              ),
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.products.value.length,
-                  itemBuilder: (context, index) {
-                    return CardEquipment.child(
-                      productModel: controller.products.value[index],
-                      onTap: () {
-                        controller.cartController.openDetailProduct(context);
-                      },
-                    );
-                  }),
-            ),
+                height: 190.h,
+                width: 350.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  // boxShadow: const [
+                  //   BoxShadow(
+                  //     color: Colors.grey,
+                  //     blurRadius: 10.0,
+                  //   )
+                  // ],
+                ),
+                child: Obx(
+                  () => ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.products.value.length,
+                      itemBuilder: (context, index) {
+                        return CardEquipment.child(
+                          productModel: controller.products.value[index],
+                          onTap: () {
+                            controller.cartController.openDetailProduct(
+                                context, controller.products.value[index]);
+                          },
+                        );
+                      }),
+                )),
             TitleCategory.child(
                 text: 'Services film equipment', onPress: () {}),
             Container(

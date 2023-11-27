@@ -18,6 +18,7 @@ class ForgotPasswordOptView extends GetView<ForgotPasswordOptController> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

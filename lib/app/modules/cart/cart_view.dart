@@ -52,7 +52,8 @@ class CartView extends GetView<CartController> {
             children: [
               Column(
                 children: [
-                  CardCartEquipment.child(onTap: () {}),
+                  for (var i = 0; i < controller.carts.value.length; i++)
+                    // CardCartEquipment.child(onTap: () {},),
                   SizedBox(
                     height: 30.h,
                   ),

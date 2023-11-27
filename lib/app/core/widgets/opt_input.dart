@@ -28,7 +28,6 @@ abstract class OptInput {
             }
           },
           decoration: const InputDecoration(
-            hintText: "0",
             border: InputBorder.none,
           ),
           keyboardType: TextInputType.number,
