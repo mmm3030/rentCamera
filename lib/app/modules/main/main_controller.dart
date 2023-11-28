@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/controller/cart_controller.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
+import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/core/values/app_colors.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
 import 'package:rent_camera/app/core/values/text_styles.dart';

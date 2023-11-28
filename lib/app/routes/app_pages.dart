@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
+import 'package:rent_camera/app/modules/add_credit_card/add_card_binding.dart';
+import 'package:rent_camera/app/modules/add_credit_card/add_card_view.dart';
 import 'package:rent_camera/app/modules/address/address_binding.dart';
 import 'package:rent_camera/app/modules/address/address_view.dart';
+import 'package:rent_camera/app/modules/card/card_binding.dart';
+import 'package:rent_camera/app/modules/card/card_view.dart';
 import 'package:rent_camera/app/modules/cart/cart_binding.dart';
 import 'package:rent_camera/app/modules/cart/cart_view.dart';
 import 'package:rent_camera/app/modules/checkout/checkout_binding.dart';
@@ -135,6 +139,18 @@ class AppPages {
       page: () => const AddressView(),
       binding: AddressBinding(),
       transition: Transition.rightToLeftWithFade,
+    ),
+    GetPage(
+      name: _Paths.CARD,
+      page: () => const CardView(),
+      binding: CardBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: _Paths.ADDCARD,
+      page: () => const AddCardView(),
+      binding: AddCardBinding(),
+      transition: Transition.noTransition,
     ),
   ];
 }

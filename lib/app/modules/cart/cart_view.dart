@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/controller/cart_controller.dart';
+import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/core/values/app_assets.dart';
 import 'package:rent_camera/app/core/values/app_colors.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
@@ -39,93 +40,110 @@ class CartView extends GetView<CartController> {
                 fontWeight: FontWeights.medium),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  for (var i = 0;
-                      i < controller.mapCartData.value.keys.toList().length;
-                      i++)
-                    CardCartEquipment.child(
-                        productModel:
-                            controller.mapCartData.value.values.toList()[i],
-                        cartModel:
-                            controller.mapCartData.value.keys.toList()[i],
-                        onTapDecrease: () {
-                          controller.fetchUpdateCart(
-                              controller.mapCartData.value.keys.toList()[i],
+        body: RefreshIndicator(
+          onRefresh: () {
+            return controller.fetchCart();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    for (var i = 0;
+                        i < controller.mapCartData.value.keys.toList().length;
+                        i++)
+                      CardCartEquipment.child(
+                          productModel:
                               controller.mapCartData.value.values.toList()[i],
-                              false);
-                        },
-                        onTapIncrease: () {
-                          controller.fetchUpdateCart(
+                          cartModel:
                               controller.mapCartData.value.keys.toList()[i],
-                              controller.mapCartData.value.values.toList()[i],
-                              true);
-                        },
-                        onTapDelete: () {
-                          controller.fetchDeleteProductCart(
-                              controller.mapCartData.value.keys.toList()[i]);
-                        }),
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  titleCart('Delivery Address', () {
-                    controller.deliveryAddress();
-                  }),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  cardAddress(
-                      controller.addressController.primaryAddress.value.street!,
-                      controller
-                          .addressController.primaryAddress.value.country!),
-                  SizedBox(
-                    height: 30.h,
-                  ),
-                  titleCart('Payment Method', () {}),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  cardAddress('Visa Classic', '**** 7690', isVisa: true),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Order Info',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeights.medium),
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  cardOrder('Subtotal', controller.totalPrice),
-                  cardOrder('Shipping cost', 10),
-                  cardOrder('Total', controller.totalPrice + 10),
-                ],
-              ),
-              SizedBox(
-                height: 100.h,
-              ),
-              BottomButton.child(
-                  text: 'Checkout',
-                  backgroundColor:
-                      AppColors.bottomButtonColor.withOpacity(0.76),
-                  onTap: () {
-                    controller.checkOut();
-                  }),
-            ],
+                          onTapDecrease: () {
+                            controller.fetchUpdateCart(
+                                controller.mapCartData.value.keys.toList()[i],
+                                controller.mapCartData.value.values.toList()[i],
+                                false);
+                          },
+                          onTapIncrease: () {
+                            controller.fetchUpdateCart(
+                                controller.mapCartData.value.keys.toList()[i],
+                                controller.mapCartData.value.values.toList()[i],
+                                true);
+                          },
+                          onTapDelete: () {
+                            controller.fetchDeleteProductCart(
+                                controller.mapCartData.value.keys.toList()[i]);
+                          }),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    titleCart('Delivery Address', () {
+                      controller.deliveryAddress();
+                    }),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    controller.addressController.listAddress.value.isEmpty
+                        ? Container()
+                        : cardAddress(
+                            controller
+                                .addressController.primaryAddress.value.street!,
+                            controller.addressController.primaryAddress.value
+                                .country!),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    titleCart('Payment Method', () {
+                      controller.cardCredit();
+                    }),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    controller.cardController.listCard.value.isEmpty
+                        ? Container()
+                        : cardAddress(
+                            controller.cardController
+                                .getCardCredit()
+                                .cardHolderName!,
+                            '**** ${Utils.creditCard(controller.cardController.getCardCredit().cardNumber!)}',
+                            isVisa: true),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Order Info',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeights.medium),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    cardOrder('Subtotal', controller.totalPrice),
+                    cardOrder('Shipping cost', 10),
+                    cardOrder('Total', controller.totalPrice + 10),
+                  ],
+                ),
+                SizedBox(
+                  height: 100.h,
+                ),
+                BottomButton.child(
+                    text: 'Checkout',
+                    backgroundColor:
+                        AppColors.bottomButtonColor.withOpacity(0.76),
+                    onTap: () {
+                      controller.checkOut();
+                    }),
+              ],
+            ),
           ),
         ),
       );

@@ -19,6 +19,8 @@ abstract class Routes {
   static const NEWPASSWORD = _Paths.NEWPASSWORD;
   static const CART = _Paths.CART;
   static const ADDRESS = _Paths.ADDRESS;
+  static const CARD = _Paths.CARD;
+  static const ADDCARD = _Paths.ADDCARD;
 }
 
 abstract class _Paths {
@@ -39,4 +41,6 @@ abstract class _Paths {
   static const FORGOTOPT = '/forgot-opt';
   static const NEWPASSWORD = '/newpassword';
   static const ADDRESS = '/address';
+  static const CARD = '/card';
+  static const ADDCARD = '/addcard';
 }

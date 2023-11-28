@@ -16,6 +16,7 @@ import 'package:rent_camera/app/models/cart_model.dart';
 import 'package:rent_camera/app/models/product_model.dart';
 import 'package:rent_camera/app/models/review_model.dart';
 import 'package:rent_camera/app/modules/address/address_controller.dart';
+import 'package:rent_camera/app/modules/card/card_controller.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CartController extends GetxController {
   late Rx<Map<CartModel, ProductModel>> mapCartData = Rx({});
   late AddressController addressController = Get.put(AddressController());
+  late CardController cardController = Get.put(CardController());
   late Rx<List<ReviewModel>> listReview = Rx([]);
   var count = 1.obs;
   var dateStart = ''.obs;
@@ -168,21 +170,29 @@ class CartController extends GetxController {
     Get.toNamed(Routes.ADDRESS);
   }
 
+  void cardCredit() {
+    CardController().onInit();
+    Get.toNamed(Routes.CARD);
+  }
+
   void checkOut() {
+    // print(cardController.listCard.value.isEmpty);
     // Get.toNamed(Routes.CHECKOUT);
+    // fetchCheckOut();
   }
 
   Future<void> fetchCheckOut() async {
     var prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    final response = await http.post(
-        Uri.parse("${Constants.baseUrl}/Users/Bookings"),
-        headers: Constants.header(token!),
-        body: jsonEncode({
-          "addressId": addressController.primaryAddress.value.id,
-          "creditCardId": 0
-        }));
+    final response =
+        await http.post(Uri.parse("${Constants.baseUrl}/Users/Bookings"),
+            headers: Constants.header(token!),
+            body: jsonEncode({
+              "addressId": addressController.primaryAddress.value.id,
+              "creditCardId": cardController.listCard.value.first.id
+            }));
     if (response.statusCode == 200) {
+      // Get.toNamed(Routes.CHECKOUT);
     } else {
       // Get.toNamed(Routes.CHECKOUT);
     }

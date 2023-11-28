@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent_camera/app/core/controller/cart_controller.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
 import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/models/address_model.dart';
@@ -71,6 +72,9 @@ class AddressController extends GetxController {
               "isPrimary": setPrimaryAddress.isTrue
             }));
     if (response.statusCode == 200) {
+      fetchAddress();
+      CartController().onInit();
+      Get.back();
     } else if (response.statusCode == 400) {}
     update();
   }

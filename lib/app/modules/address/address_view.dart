@@ -21,7 +21,7 @@ class AddressView extends GetView<AddressController> {
             text: 'Save Address',
             backgroundColor: AppColors.bottomButtonColor.withOpacity(0.76),
             onTap: () {
-              controller.fetchAddress();
+              controller.fetchAddAddress();
             }),
         appBar: AppBar(
           elevation: 0,
