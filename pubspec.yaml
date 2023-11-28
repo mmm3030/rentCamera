@@ -44,6 +44,7 @@ dependencies:
   readmore: ^2.2.0
   syncfusion_flutter_datepicker: ^23.2.4
   http: ^1.1.0
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

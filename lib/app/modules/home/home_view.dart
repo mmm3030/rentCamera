@@ -22,12 +22,6 @@ class HomeView extends GetView<HomeController> {
                 width: 350.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  // boxShadow: const [
-                  //   BoxShadow(
-                  //     color: Colors.grey,
-                  //     blurRadius: 10.0,
-                  //   )
-                  // ],
                 ),
                 child: Obx(
                   () => ListView.builder(
@@ -37,7 +31,7 @@ class HomeView extends GetView<HomeController> {
                         return CardEquipment.child(
                           productModel: controller.products.value[index],
                           onTap: () {
-                            controller.cartController.openDetailProduct(
+                            controller.cartController.beforeOpenModal(
                                 context, controller.products.value[index]);
                           },
                         );
@@ -46,16 +40,9 @@ class HomeView extends GetView<HomeController> {
             TitleCategory.child(
                 text: 'Services film equipment', onPress: () {}),
             Container(
-              padding: EdgeInsets.only(left: 10.w),
-              height: 250.h,
+              height: 270.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 10.0,
-                  )
-                ],
               ),
               child: Obx(
                 () => ListView.builder(
@@ -75,12 +62,6 @@ class HomeView extends GetView<HomeController> {
                 width: 350.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 10.0,
-                    )
-                  ],
                 ),
                 child: Obx(
                   () => ListView.builder(

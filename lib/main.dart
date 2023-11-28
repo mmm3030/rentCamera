@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rent_camera/app/core/values/token_manager.dart';
+import 'package:rent_camera/app/modules/login/login_binding.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 
@@ -12,10 +15,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String initialRoute = AppPages.INITIAL;
-    // if (TokenManager.instance.hasToken) {
-    //   initialRoute = '${Routes.MAIN}?appInit=true';
-    // }
-
     return ScreenUtilInit(
       designSize: const Size(360, 800),
       minTextAdapt: true,
@@ -23,8 +22,10 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           title: "Rent Camera",
           initialRoute: initialRoute,
+          initialBinding: LoginBinding(),
           getPages: AppPages.routes,
           debugShowCheckedModeBanner: false,
+          builder: EasyLoading.init(),
         );
       },
     );

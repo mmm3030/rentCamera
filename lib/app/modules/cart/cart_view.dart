@@ -14,14 +14,8 @@ class CartView extends GetView<CartController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: BottomButton.child(
-            text: 'Checkout',
-            backgroundColor: AppColors.bottomButtonColor.withOpacity(0.76),
-            onTap: () {
-              controller.checkOut();
-            }),
+    return GetBuilder<CartController>(builder: (cartController) {
+      return Scaffold(
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -52,8 +46,30 @@ class CartView extends GetView<CartController> {
             children: [
               Column(
                 children: [
-                  for (var i = 0; i < controller.carts.value.length; i++)
-                    // CardCartEquipment.child(onTap: () {},),
+                  for (var i = 0;
+                      i < controller.mapCartData.value.keys.toList().length;
+                      i++)
+                    CardCartEquipment.child(
+                        productModel:
+                            controller.mapCartData.value.values.toList()[i],
+                        cartModel:
+                            controller.mapCartData.value.keys.toList()[i],
+                        onTapDecrease: () {
+                          controller.fetchUpdateCart(
+                              controller.mapCartData.value.keys.toList()[i],
+                              controller.mapCartData.value.values.toList()[i],
+                              false);
+                        },
+                        onTapIncrease: () {
+                          controller.fetchUpdateCart(
+                              controller.mapCartData.value.keys.toList()[i],
+                              controller.mapCartData.value.values.toList()[i],
+                              true);
+                        },
+                        onTapDelete: () {
+                          controller.fetchDeleteProductCart(
+                              controller.mapCartData.value.keys.toList()[i]);
+                        }),
                   SizedBox(
                     height: 30.h,
                   ),
@@ -63,7 +79,10 @@ class CartView extends GetView<CartController> {
                   SizedBox(
                     height: 10.h,
                   ),
-                  cardAddress("Chhatak, Sunamgonj 12/8AB", 'Sylhet'),
+                  cardAddress(
+                      controller.addressController.primaryAddress.value.street!,
+                      controller
+                          .addressController.primaryAddress.value.country!),
                   SizedBox(
                     height: 30.h,
                   ),
@@ -71,31 +90,46 @@ class CartView extends GetView<CartController> {
                   SizedBox(
                     height: 10.h,
                   ),
-                  cardAddress('Visa Classic', '**** 7690'),
+                  cardAddress('Visa Classic', '**** 7690', isVisa: true),
                   SizedBox(
                     height: 20.h,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
-                    child: Text(
-                      'Order Info',
-                      style: TextStyle(
-                          fontSize: 16.sp, fontWeight: FontWeights.medium),
-                    ),
-                  ),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Order Info',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeights.medium),
+                          ),
+                        ],
+                      )),
                   SizedBox(
                     height: 10.h,
                   ),
-                  cardOrder('Subtotal', 110),
+                  cardOrder('Subtotal', controller.totalPrice),
                   cardOrder('Shipping cost', 10),
-                  cardOrder('Total', 120),
+                  cardOrder('Total', controller.totalPrice + 10),
                 ],
               ),
+              SizedBox(
+                height: 100.h,
+              ),
+              BottomButton.child(
+                  text: 'Checkout',
+                  backgroundColor:
+                      AppColors.bottomButtonColor.withOpacity(0.76),
+                  onTap: () {
+                    controller.checkOut();
+                  }),
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget cardOrder(String text, double number) {
@@ -120,7 +154,7 @@ class CartView extends GetView<CartController> {
     );
   }
 
-  Widget cardAddress(String text, String subtext) {
+  Widget cardAddress(String text, String subtext, {bool isVisa = false}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Row(
@@ -128,14 +162,23 @@ class CartView extends GetView<CartController> {
         children: [
           Row(
             children: [
-              Container(
-                width: 50.w,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-              ),
+              isVisa
+                  ? Container(
+                      width: 50.w,
+                      height: 50.w,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    )
+                  : Container(
+                      width: 50.w,
+                      height: 50.w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Image.asset(AppAssets.IconMap),
+                    ),
               SizedBox(
                 width: 10.w,
               ),

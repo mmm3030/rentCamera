@@ -18,6 +18,30 @@ class DateTimeUtils {
     return dateTime == null ? '-' : DateFormat('dd/MM/yyyy').format(dateTime);
   }
 
+  static String stringToDateTime(String dateTime) {
+    initializeDateFormatting();
+    if (dateTime.isEmpty) {
+      return "";
+    }
+    DateTime parseDate = DateFormat("dd/MM/yyyy").parse(dateTime);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('yyyy-MM-dd');
+    var outputDate = outputFormat.format(inputDate);
+    return outputDate;
+  }
+
+  static String stringToDateTimeVer2(String dateTime) {
+    initializeDateFormatting();
+    if (dateTime.isEmpty) {
+      return "";
+    }
+    DateTime parseDate = DateFormat("yyyy-MM-dd").parse(dateTime.split("T")[0]);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat('dd MMM, yyyy');
+    var outputDate = outputFormat.format(inputDate);
+    return outputDate;
+  }
+
   static DateTime? parseDateTime(int? timestamp) {
     return timestamp == null
         ? null

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/controller/cart_controller.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
@@ -15,6 +16,7 @@ class EquipmentController extends GetxController {
   late Rx<Map<CategoryModel, List<ProductModel>>> mapData = Rx({});
 
   Future<void> init() async {
+    EasyLoading.show(status: 'loading...');
     await fetchListCategory();
   }
 
@@ -33,6 +35,7 @@ class EquipmentController extends GetxController {
         mapDataTmp[category] = await getProductsByCategory(category.id!);
       }
       mapData(mapDataTmp);
+      EasyLoading.dismiss();
     } else {}
     update();
   }

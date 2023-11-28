@@ -10,16 +10,20 @@ import 'package:rent_camera/app/core/utils/date_time_utils.dart';
 import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
 import 'package:rent_camera/app/core/widgets/card_equipment.dart';
+import 'package:rent_camera/app/core/widgets/card_review.dart';
 import 'package:rent_camera/app/core/widgets/rent_button.dart';
 import 'package:rent_camera/app/models/cart_model.dart';
 import 'package:rent_camera/app/models/product_model.dart';
+import 'package:rent_camera/app/models/review_model.dart';
+import 'package:rent_camera/app/modules/address/address_controller.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartController extends GetxController {
-  late Rx<List<CartModel>> carts = Rx([]);
-  
+  late Rx<Map<CartModel, ProductModel>> mapCartData = Rx({});
+  late AddressController addressController = Get.put(AddressController());
+  late Rx<List<ReviewModel>> listReview = Rx([]);
   var count = 1.obs;
   var dateStart = ''.obs;
   var dateEnd = ''.obs;
@@ -34,7 +38,80 @@ class CartController extends GetxController {
     count--;
   }
 
-  Future<void> fetchListProduct() async {
+  @override
+  void onInit() {
+    fetchCart();
+    super.onInit();
+  }
+
+  get totalPrice {
+    var total = 0.0;
+    mapCartData.value.forEach((key, value) {
+      total += key.quantity! * value.amount!;
+    });
+    return total;
+  }
+
+  void getProductByProductId(int productId) {}
+
+  Future<void> fetchUpdateCart(
+      CartModel cartModel, ProductModel productModel, bool isIncrease) async {
+    var prefs = await SharedPreferences.getInstance();
+    int newQuantity =
+        isIncrease ? cartModel.quantity! + 1 : cartModel.quantity! - 1;
+    String? token = prefs.getString('token');
+    final response = await http.put(
+        Uri.parse("${Constants.baseUrl}/Users/CartItems/${cartModel.id}"),
+        headers: Constants.header(token!),
+        body: jsonEncode({
+          "id": cartModel.id,
+          "quantity": newQuantity,
+          "startDate": cartModel.startDate,
+          "endDate": cartModel.endDate,
+        }));
+    if (response.statusCode == 200) {
+      await fetchCart();
+    } else if (response.statusCode == 400) {}
+    update();
+  }
+
+  Future<void> fetchDeleteProductCart(CartModel cartModel) async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.delete(
+      Uri.parse("${Constants.baseUrl}/Users/CartItems/${cartModel.id}"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      await fetchCart();
+    } else if (response.statusCode == 400) {}
+    update();
+  }
+
+  Future<void> fetchAddToCart(ProductModel productModel) async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.post(
+      Uri.parse("${Constants.baseUrl}/Users/CartItems"),
+      headers: Constants.header(token!),
+      body: jsonEncode({
+        "quantity": count.value,
+        "startDate": DateTimeUtils.stringToDateTime(dateStart.value),
+        "endDate": DateTimeUtils.stringToDateTime(dateEnd.value),
+        "productId": productModel.id,
+      }),
+    );
+    if (response.statusCode == 200) {
+      await fetchCart();
+      Get.toNamed(Routes.CART);
+    } else if (response.statusCode == 400) {
+      Utils.toast('Notification',
+          'The product has been in your cart during this period!');
+    }
+    update();
+  }
+
+  Future<void> fetchCart() async {
     var prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     final response = await http.get(
@@ -43,16 +120,30 @@ class CartController extends GetxController {
     );
     if (response.statusCode == 200) {
       List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
-      List<CartModel> cartList = [];
+      Map<CartModel, ProductModel> mapDataTmp = {};
       for (var p in result) {
         CartModel cart = CartModel.fromJson(p);
-        cartList.add(cart);
+        mapDataTmp[cart] = await getProductsByProductId(cart.productId!);
       }
-      carts(cartList);
-    } else {
-      Utils.handleError401();
-    }
+      mapCartData(mapDataTmp);
+    } else {}
     update();
+  }
+
+  Future<ProductModel> getProductsByProductId(int id) async {
+    late ProductModel products = ProductModel();
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse("${Constants.baseUrl}/Products/$id"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      var result = jsonDecode(utf8.decode(response.bodyBytes));
+      products = ProductModel.fromJson(result);
+    } else {}
+    update();
+    return products;
   }
 
   Future<void> showDate(BuildContext context) async {
@@ -69,8 +160,8 @@ class CartController extends GetxController {
     dateEnd.value = DateTimeUtils.dateTimeToString(newDateRange.end);
   }
 
-  void addToCart() {
-    Get.toNamed(Routes.CART);
+  Future<void> addToCart(ProductModel productModel) async {
+    await fetchAddToCart(productModel);
   }
 
   void deliveryAddress() {
@@ -81,7 +172,52 @@ class CartController extends GetxController {
     // Get.toNamed(Routes.CHECKOUT);
   }
 
-  void openDetailProduct(BuildContext context, ProductModel productModel) {
+  Future<void> fetchCheckOut() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.post(
+        Uri.parse("${Constants.baseUrl}/Users/Bookings"),
+        headers: Constants.header(token!),
+        body: jsonEncode({
+          "addressId": addressController.primaryAddress.value.id,
+          "creditCardId": 0
+        }));
+    if (response.statusCode == 200) {
+    } else {
+      // Get.toNamed(Routes.CHECKOUT);
+    }
+    update();
+  }
+
+  Future<void> fetchReview(ProductModel productModel) async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse("${Constants.baseUrl}/Products/${productModel.id}/Reviews"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> data = result['contends'];
+      List<ReviewModel> listReviewTmp = [];
+      for (var p in data) {
+        ReviewModel reviewModel = ReviewModel.fromJson(p);
+        listReviewTmp.add(reviewModel);
+      }
+      listReview(listReviewTmp);
+    } else {}
+    update();
+  }
+
+  Future<void> beforeOpenModal(
+      BuildContext context, ProductModel productModel) async {
+    count.value = 1;
+    await fetchReview(productModel);
+    openDetailProduct(Get.context!, productModel);
+  }
+
+  Future<void> openDetailProduct(
+      BuildContext context, ProductModel productModel) async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -233,98 +369,8 @@ class CartController extends GetxController {
                                 ),
                               ],
                             )),
-                        Column(
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const CircleAvatar(),
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Column(
-                                        children: [
-                                          const Text(
-                                            'Ronald Richards',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeights.medium),
-                                          ),
-                                          SizedBox(
-                                            height: 5.h,
-                                          ),
-                                          const Text(
-                                            '🕐 13 Sep, 2020',
-                                            style: TextStyle(
-                                                color: Color(0xff8F959E),
-                                                fontWeight:
-                                                    FontWeights.regular),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '4.8',
-                                            style: TextStyle(
-                                                fontSize: 15.sp,
-                                                color: Colors.black,
-                                                fontWeight: FontWeights.medium),
-                                          ),
-                                          SizedBox(
-                                            width: 5.w,
-                                          ),
-                                          const Text(
-                                            'rating',
-                                            style: TextStyle(
-                                                color: Color(0xff8F959E),
-                                                fontWeight:
-                                                    FontWeights.regular),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.star_rounded,
-                                              size: 18.sp,
-                                              color: const Color(0xFFFF981F)),
-                                          Icon(Icons.star_rounded,
-                                              size: 18.sp,
-                                              color: const Color(0xFFFF981F)),
-                                          Icon(Icons.star_rounded,
-                                              size: 18.sp,
-                                              color: const Color(0xFFFF981F)),
-                                          Icon(Icons.star_rounded,
-                                              size: 18.sp,
-                                              color: const Color(0xFFFF981F)),
-                                          Icon(Icons.star_border_rounded,
-                                              size: 18.sp,
-                                              color: const Color(0xFF8F959E)),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ]),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...',
-                              style: TextStyle(
-                                  fontSize: 15.sp,
-                                  color: const Color(0xff8F959E),
-                                  fontWeight: FontWeights.regular),
-                            )
-                          ],
-                        ),
+                        for (var i = 0; i < listReview.value.length; i++)
+                          CardReview.child(reviewModel: listReview.value[i]),
                         SizedBox(
                           height: 40.h,
                         ),
@@ -340,7 +386,7 @@ class CartController extends GetxController {
                                 backgroundColor: const Color(0xFFFF7F00),
                                 width: 150.w,
                                 onPress: () {
-                                  addToCart();
+                                  addToCart(productModel);
                                 }),
                           ],
                         ),

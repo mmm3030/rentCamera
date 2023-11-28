@@ -9,4 +9,5 @@ abstract class AppAssets {
   static const String IconSearch = 'assets/svg/search-normal.svg';
   static const String OrderBackground1 = 'assets/img/background_order.png';
   static const String OrderBackground2 = 'assets/img/order.png';
+  static const String IconMap = 'assets/img/map.png';
 }

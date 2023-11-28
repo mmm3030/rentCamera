@@ -21,7 +21,7 @@ abstract class CardProject {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         height: 190.h,
         width: 310.w,
         decoration: BoxDecoration(

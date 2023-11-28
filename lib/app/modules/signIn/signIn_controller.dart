@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
@@ -29,6 +30,7 @@ class SignInController extends GetxController {
   }
 
   Future<void> login() async {
+    EasyLoading.show(status: 'loading...');
     var prefs = await SharedPreferences.getInstance();
     final response =
         await http.post(Uri.parse("${Constants.baseUrl}/Auth/SignIn"),
@@ -44,6 +46,8 @@ class SignInController extends GetxController {
       prefs.setString(
           'refreshToken', jsonDecode(response.body)['refreshToken']);
       Get.toNamed(Routes.MAIN);
+      EasyLoading.dismiss();
+
       update();
     } else if (response.statusCode == 401) {
       Utils.handleError401();

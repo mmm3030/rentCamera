@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/controller/cart_controller.dart';
+import 'package:rent_camera/app/core/utils/constants.dart';
 import 'package:rent_camera/app/core/values/app_colors.dart';
 import 'package:rent_camera/app/core/values/font_weights.dart';
 import 'package:rent_camera/app/core/values/text_styles.dart';
 import 'package:rent_camera/app/core/widgets/card_equipment.dart';
+import 'package:rent_camera/app/models/product_model.dart';
+import 'package:rent_camera/app/models/profile_model.dart';
+import 'package:rent_camera/app/models/project_models.dart';
+import 'package:rent_camera/app/modules/address/address_controller.dart';
 import 'package:rent_camera/app/modules/contact/contact_controller.dart';
 import 'package:rent_camera/app/modules/contact/contact_view.dart';
 import 'package:rent_camera/app/modules/equipment/equipment_controller.dart';
@@ -14,6 +21,9 @@ import 'package:rent_camera/app/modules/home/home_controller.dart';
 import 'package:rent_camera/app/modules/home/home_view.dart';
 import 'package:rent_camera/app/modules/profile/profile_controller.dart';
 import 'package:rent_camera/app/modules/profile/profile_view.dart';
+import 'package:rent_camera/app/routes/app_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class MainController extends GetxController {
   late HomeController _homeController;
@@ -22,7 +32,10 @@ class MainController extends GetxController {
   late ContactController _contactController;
   late ProfileController _profileController;
   late CartController _cartController;
-
+  late AddressController _addressController;
+  late CartController cartController = Get.put(CartController());
+  late Rx<ProfileModel> profile = Rx(ProfileModel());
+  late Rx<List<ProductModel>> products = Rx([]);
   PageStorageBucket bucket = PageStorageBucket();
   var currentTab = 0.obs;
 
@@ -49,13 +62,6 @@ class MainController extends GetxController {
     _equipmentController = Get.find<EquipmentController>();
     _equipmentController.init();
 
-    // Get.put(
-    //   ProcedureController(),
-    //   permanent: true,
-    // );
-    // _procedureController = Get.find<ProcedureController>();
-    // _procedureController.init();
-
     Get.put(
       ContactController(),
       permanent: true,
@@ -75,10 +81,19 @@ class MainController extends GetxController {
       permanent: true,
     );
     _cartController = Get.find<CartController>();
+    _cartController.onInit();
+
+    Get.put(
+      AddressController(),
+      permanent: true,
+    );
+    _addressController = Get.find<AddressController>();
+    _addressController.onInit();
   }
 
   @override
   Future<void> onInit() async {
+    fetchProfile();
     initController();
     super.onInit();
   }
@@ -103,7 +118,10 @@ class MainController extends GetxController {
 
   TextEditingController search = TextEditingController();
 
-  void searchProduct(value, BuildContext context) {
+  Future<void> searchProduct(value, BuildContext context) async {
+    await fetchSearchProduct(value);
+
+    // ignore: use_build_context_synchronously
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -142,7 +160,7 @@ class MainController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Showing 10 results',
+                          'Showing ${products.value.length} results',
                           style: h6.copyWith(fontSize: 15.sp),
                         ),
                         const Row(
@@ -165,12 +183,15 @@ class MainController extends GetxController {
                               height: 15.h,
                             ),
                         scrollDirection: Axis.vertical,
-                        itemCount: 3,
+                        itemCount: products.value.length,
                         itemBuilder: (context, index) {
-                          return Container();
-                          // return CardEquipment.child(
-                          //   onTap: () {},
-                          // );
+                          return CardEquipment.child(
+                            productModel: products.value[index],
+                            onTap: () {
+                              cartController.beforeOpenModal(
+                                  context, products.value[index]);
+                            },
+                          );
                         }),
                   ),
                 ],
@@ -181,5 +202,50 @@ class MainController extends GetxController {
       },
     );
     search.text = '';
+  }
+
+  void openDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+
+  Future<void> fetchProfile() async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse("${Constants.baseUrl}/Users/Profile"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      var result = jsonDecode(utf8.decode(response.bodyBytes));
+      profile(ProfileModel.fromJson(result));
+    } else {}
+    update();
+  }
+
+  Future<void> fetchSearchProduct(String keyword) async {
+    var prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final response = await http.get(
+      Uri.parse(
+          "${Constants.baseUrl}/Products?sort=averageRating%2Cdesc&Search=$keyword"),
+      headers: Constants.header(token!),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> data = result['contends'];
+      List<ProductModel> productList = [];
+      for (var p in data) {
+        ProductModel product = ProductModel.fromJson(p);
+        productList.add(product);
+      }
+      products(productList);
+    } else {}
+    update();
+  }
+
+  Future<void> logout() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    Get.offAllNamed(Routes.LOGIN);
   }
 }

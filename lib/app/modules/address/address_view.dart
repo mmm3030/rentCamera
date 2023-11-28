@@ -16,10 +16,13 @@ class AddressView extends GetView<AddressController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomButton.child(
             text: 'Save Address',
             backgroundColor: AppColors.bottomButtonColor.withOpacity(0.76),
-            onTap: () {}),
+            onTap: () {
+              controller.fetchAddress();
+            }),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,

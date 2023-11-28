@@ -5,15 +5,17 @@ import 'package:rent_camera/app/core/values/font_weights.dart';
 
 abstract class CardServices {
   static Widget child(
-      {required String? imageUrl, required String? name, required String? count}) {
+      {required String? imageUrl,
+      required String? name,
+      required String? count}) {
     return _cardServices(imageUrl, name, count);
   }
 
   static Widget _cardServices(String? imageUrl, String? name, String? count) {
     return Container(
-      margin: EdgeInsets.only(right: 20.w),
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       width: 162.w,
-      height: 250.h,
+      height: 280.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),

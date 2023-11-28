@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:rent_camera/app/core/controller/cart_controller.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
@@ -9,6 +8,7 @@ import 'package:rent_camera/app/models/project_models.dart';
 import 'package:rent_camera/app/models/service_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeController extends GetxController {
   late Rx<List<ServiceModels>> services = Rx([]);
@@ -61,7 +61,9 @@ class HomeController extends GetxController {
   }
 
   Future<void> init() async {
-    fetchListProduct();
+    EasyLoading.show(status: 'loading...');
+    await fetchListProduct();
     await readFileJson();
+    EasyLoading.dismiss();
   }
 }

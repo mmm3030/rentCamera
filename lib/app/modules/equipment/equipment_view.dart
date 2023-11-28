@@ -38,7 +38,7 @@ class EquipmentView extends GetView<EquipmentController> {
                               productModel: controller.mapData.value.values
                                   .toList()[i][index],
                               onTap: () {
-                                controller.cartController.openDetailProduct(
+                                controller.cartController.beforeOpenModal(
                                     context,
                                     controller.mapData.value.values.toList()[i]
                                         [index]);
