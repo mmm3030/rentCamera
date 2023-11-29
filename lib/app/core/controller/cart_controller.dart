@@ -131,6 +131,7 @@ class CartController extends GetxController {
         mapDataTmp[cart] = await getProductsByProductId(cart.productId!);
       }
       mapCartData(mapDataTmp);
+      print('${mapCartData.value}');
     } else {}
     update();
   }
@@ -195,16 +196,15 @@ class CartController extends GetxController {
               "creditCardId": cardController.listCard.value.first.id
             }));
     if (response.statusCode == 200) {
-      Get.toNamed(Routes.CHECKOUT);
+      await fetchCart();
+      Get.offNamed(Routes.CHECKOUT);
     } else {
-      // Get.toNamed(Routes.CHECKOUT);
+
     }
     update();
   }
 
   Future<void> fetchReview(ProductModel productModel) async {
-    var prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
     final response = await http.get(
       Uri.parse("${Constants.baseUrl}/Products/${productModel.id}/Reviews"),
       headers: {

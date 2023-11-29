@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rent_camera/app/core/controller/cart_controller.dart';
 import 'package:rent_camera/app/core/utils/index.dart';
 import 'package:rent_camera/app/core/values/app_assets.dart';
 import 'package:rent_camera/app/core/values/app_colors.dart';

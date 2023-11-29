@@ -220,10 +220,6 @@ class MainController extends GetxController with StateMixin {
     search.text = '';
   }
 
-  void openDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
-
   Future<void> fetchProfile() async {
     var prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
