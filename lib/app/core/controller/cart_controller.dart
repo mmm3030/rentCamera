@@ -207,7 +207,9 @@ class CartController extends GetxController {
     String? token = prefs.getString('token');
     final response = await http.get(
       Uri.parse("${Constants.baseUrl}/Products/${productModel.id}/Reviews"),
-      headers: Constants.header(token!),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
