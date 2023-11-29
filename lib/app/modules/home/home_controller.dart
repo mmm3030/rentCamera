@@ -45,7 +45,9 @@ class HomeController extends GetxController {
     String? token = prefs.getString('token');
     final response = await http.get(
       Uri.parse("${Constants.baseUrl}/Products?sort=averageRating%2Cdesc"),
-      headers: Constants.header(token!),
+      headers: {
+            'Content-Type': 'application/json',
+      },
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));

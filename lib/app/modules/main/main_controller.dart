@@ -26,7 +26,15 @@ import 'package:rent_camera/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class MainController extends GetxController {
+class MainController extends GetxController with StateMixin {
+  getData() async {
+    change(null, status: RxStatus.loading());
+    await HomeController().init();
+    // await Future.delayed(const Duration(seconds: 1));
+    
+    change(null, status: RxStatus.success());
+  }
+
   late HomeController _homeController;
   late EquipmentController _equipmentController;
   // late ProcedureController _procedureController;
@@ -39,7 +47,7 @@ class MainController extends GetxController {
   late Rx<List<ProductModel>> products = Rx([]);
   PageStorageBucket bucket = PageStorageBucket();
   var currentTab = 0.obs;
-
+  var isAuthentication = false.obs;
   final List<Widget> _screens = [
     const HomeView(),
     const EquipmentView(),
@@ -94,7 +102,12 @@ class MainController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    fetchProfile();
+    bool isAuth = await Utils.checkTokenValid();
+    if (isAuth) {
+      isAuthentication.value = isAuth;
+      fetchProfile();
+    }
+    getData();
     initController();
     super.onInit();
   }

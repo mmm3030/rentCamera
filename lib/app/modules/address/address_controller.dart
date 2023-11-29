@@ -22,8 +22,12 @@ class AddressController extends GetxController {
   late Rx<AddressModel> primaryAddress = Rx(AddressModel());
 
   @override
-  onInit() {
-    fetchAddress();
+  onInit() async {
+     bool isAuth = await Utils.checkTokenValid();
+    if (isAuth) {
+       fetchAddress();
+    }
+
     super.onInit();
   }
 

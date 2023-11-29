@@ -41,8 +41,11 @@ class CartController extends GetxController {
   }
 
   @override
-  void onInit() {
-    fetchCart();
+  Future<void> onInit() async {
+    bool isAuth = await Utils.checkTokenValid();
+    if (isAuth) {
+      fetchCart();
+    }
     super.onInit();
   }
 
@@ -395,8 +398,13 @@ class CartController extends GetxController {
                                 text: 'Add to cart',
                                 backgroundColor: const Color(0xFFFF7F00),
                                 width: 150.w,
-                                onPress: () {
-                                  addToCart(productModel);
+                                onPress: () async {
+                                  bool isAuth = await Utils.checkTokenValid();
+                                  if (isAuth) {
+                                    addToCart(productModel);
+                                  } else {
+                                    Get.toNamed(Routes.LOGIN);
+                                  }
                                 }),
                           ],
                         ),

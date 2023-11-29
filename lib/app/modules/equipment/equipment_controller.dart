@@ -16,17 +16,15 @@ class EquipmentController extends GetxController {
   late Rx<Map<CategoryModel, List<ProductModel>>> mapData = Rx({});
 
   Future<void> init() async {
-    EasyLoading.show(status: 'loading...');
     await fetchListCategory();
   }
 
   Future<void> fetchListCategory() async {
-    var prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    final response = await http.get(
-      Uri.parse("${Constants.baseUrl}/Categories"),
-      headers: Constants.header(token!),
-    );
+    EasyLoading.show(status: 'loading...');
+    final response =
+        await http.get(Uri.parse("${Constants.baseUrl}/Categories"), headers: {
+      'Content-Type': 'application/json',
+    });
     if (response.statusCode == 200) {
       List<dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       Map<CategoryModel, List<ProductModel>> mapDataTmp = {};
@@ -35,19 +33,20 @@ class EquipmentController extends GetxController {
         mapDataTmp[category] = await getProductsByCategory(category.id!);
       }
       mapData(mapDataTmp);
-      EasyLoading.dismiss();
     } else {}
     update();
+    EasyLoading.dismiss();
   }
 
   Future<List<ProductModel>> getProductsByCategory(int id) async {
     late List<ProductModel> products = [];
     var prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    // String? token = prefs.getString('token');
     final response = await http.get(
-      Uri.parse("${Constants.baseUrl}/Products?categoryId=$id"),
-      headers: Constants.header(token!),
-    );
+        Uri.parse("${Constants.baseUrl}/Products?categoryId=$id"),
+        headers: {
+          'Content-Type': 'application/json',
+        });
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> data = result['contends'];

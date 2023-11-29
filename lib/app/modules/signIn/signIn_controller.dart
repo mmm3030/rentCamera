@@ -7,6 +7,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:rent_camera/app/core/utils/constants.dart';
 import 'package:rent_camera/app/core/utils/date_time_utils.dart';
 import 'package:rent_camera/app/core/utils/index.dart';
+import 'package:rent_camera/app/modules/main/main_controller.dart';
 import 'package:rent_camera/app/routes/app_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -46,6 +47,7 @@ class SignInController extends GetxController {
       prefs.setString(
           'refreshToken', jsonDecode(response.body)['refreshToken']);
       Get.toNamed(Routes.MAIN);
+      MainController().onInit();
       EasyLoading.dismiss();
 
       update();
