@@ -31,7 +31,7 @@ class CardController extends GetxController {
   }
 
   void saveCard() {
-    Get.back();
+    Get.toNamed(Routes.CART);
   }
 
   Future<void> fetchCreditCard() async {

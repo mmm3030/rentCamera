@@ -176,7 +176,7 @@ class CartController extends GetxController {
 
   void cardCredit() {
     CardController().onInit();
-    Get.toNamed(Routes.CARD);
+    Get.offNamed(Routes.CARD);
   }
 
   void checkOut() {
