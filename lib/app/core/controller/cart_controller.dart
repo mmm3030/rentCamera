@@ -181,7 +181,7 @@ class CartController extends GetxController {
   void checkOut() {
     // print(cardController.listCard.value.isEmpty);
     // Get.toNamed(Routes.CHECKOUT);
-    // fetchCheckOut();
+    fetchCheckOut();
   }
 
   Future<void> fetchCheckOut() async {
@@ -195,7 +195,7 @@ class CartController extends GetxController {
               "creditCardId": cardController.listCard.value.first.id
             }));
     if (response.statusCode == 200) {
-      // Get.toNamed(Routes.CHECKOUT);
+      Get.toNamed(Routes.CHECKOUT);
     } else {
       // Get.toNamed(Routes.CHECKOUT);
     }
