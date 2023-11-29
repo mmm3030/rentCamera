@@ -30,8 +30,6 @@ class MainController extends GetxController with StateMixin {
   getData() async {
     change(null, status: RxStatus.loading());
     await HomeController().init();
-    // await Future.delayed(const Duration(seconds: 1));
-    
     change(null, status: RxStatus.success());
   }
 
@@ -48,6 +46,7 @@ class MainController extends GetxController with StateMixin {
   PageStorageBucket bucket = PageStorageBucket();
   var currentTab = 0.obs;
   var isAuthentication = false.obs;
+  bool isLogin = false;
   final List<Widget> _screens = [
     const HomeView(),
     const EquipmentView(),
@@ -55,6 +54,8 @@ class MainController extends GetxController with StateMixin {
     const ProfileView(),
   ];
   Widget get currentScreen => _screens[currentTab.value];
+
+  get isAuth => isAuthentication.value;
 
   void initController() {
     Get.put(
@@ -105,6 +106,7 @@ class MainController extends GetxController with StateMixin {
     bool isAuth = await Utils.checkTokenValid();
     if (isAuth) {
       isAuthentication.value = isAuth;
+      isLogin = isAuth;
       fetchProfile();
     }
     getData();
@@ -237,15 +239,12 @@ class MainController extends GetxController with StateMixin {
   }
 
   Future<void> fetchSearchProduct(String keyword) async {
-    var prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
     final response = await http.get(
-      Uri.parse(
-          "${Constants.baseUrl}/Products?sort=averageRating%2Cdesc&Search=$keyword"),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    );
+        Uri.parse(
+            "${Constants.baseUrl}/Products?sort=averageRating%2Cdesc&Search=$keyword"),
+        headers: {
+          'Content-Type': 'application/json',
+        });
     if (response.statusCode == 200) {
       Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> data = result['contends'];

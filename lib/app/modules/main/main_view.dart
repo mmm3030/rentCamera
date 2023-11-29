@@ -19,11 +19,10 @@ class MainView extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     return controller.obx(
-      (state) => WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: SafeArea(
+      (state) => WillPopScope(onWillPop: () async {
+        return false;
+      }, child: GetBuilder<MainController>(builder: (mainController) {
+        return SafeArea(
           child: Scaffold(
               drawerEnableOpenDragGesture: false,
               drawer: Obx(() => Drawer(
@@ -58,7 +57,7 @@ class MainView extends GetView<MainController> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0,
-                                    backgroundColor: Color(0xFFF5F5F5),
+                                    backgroundColor: const Color(0xFFF5F5F5),
                                   ),
                                   child: Text(
                                     '${controller.profile.value.totalQuantityItemInCart} Orders',
@@ -141,7 +140,7 @@ class MainView extends GetView<MainController> {
                                   if (isAuth) {
                                     Scaffold.of(context).openDrawer();
                                   } else {
-                                    Get.toNamed(Routes.LOGIN);
+                                    Get.offAllNamed(Routes.LOGIN);
                                   }
                                 },
                                 isActive: false));
@@ -195,8 +194,8 @@ class MainView extends GetView<MainController> {
                   ],
                 ),
               )),
-        ),
-      ),
+        );
+      })),
     );
   }
 }

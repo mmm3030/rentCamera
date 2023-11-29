@@ -46,8 +46,8 @@ class SignInController extends GetxController {
       prefs.setString('token', jsonDecode(response.body)['accessToken']);
       prefs.setString(
           'refreshToken', jsonDecode(response.body)['refreshToken']);
-      Get.toNamed(Routes.MAIN);
       MainController().onInit();
+      Get.toNamed(Routes.MAIN);
       EasyLoading.dismiss();
 
       update();

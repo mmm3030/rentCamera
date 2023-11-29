@@ -44,7 +44,7 @@ class HomeView extends GetView<HomeController> {
               TitleCategory.child(
                   text: 'Services film equipment', onPress: () {}),
               Container(
-                height: 270.h,
+                height: 290.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
                 ),

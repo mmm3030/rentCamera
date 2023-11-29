@@ -20,7 +20,7 @@ class EquipmentController extends GetxController {
   }
 
   Future<void> fetchListCategory() async {
-    EasyLoading.show(status: 'loading...');
+    // EasyLoading.show(status: 'loading...');
     final response =
         await http.get(Uri.parse("${Constants.baseUrl}/Categories"), headers: {
       'Content-Type': 'application/json',
@@ -35,13 +35,11 @@ class EquipmentController extends GetxController {
       mapData(mapDataTmp);
     } else {}
     update();
-    EasyLoading.dismiss();
+    // EasyLoading.dismiss();
   }
 
   Future<List<ProductModel>> getProductsByCategory(int id) async {
     late List<ProductModel> products = [];
-    var prefs = await SharedPreferences.getInstance();
-    // String? token = prefs.getString('token');
     final response = await http.get(
         Uri.parse("${Constants.baseUrl}/Products?categoryId=$id"),
         headers: {

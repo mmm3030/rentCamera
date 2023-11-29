@@ -26,7 +26,7 @@ abstract class RentButton {
           onPressed: onPress,
           child: Text(
             text,
-            style: TextStyle(fontSize: 15.sp),
+            style: TextStyle(fontSize: 15.sp, color: Colors.white),
           )),
     );
   }
