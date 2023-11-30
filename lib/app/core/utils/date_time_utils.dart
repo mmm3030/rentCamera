@@ -35,9 +35,9 @@ class DateTimeUtils {
     if (dateTime.isEmpty) {
       return "";
     }
-    DateTime parseDate = DateFormat("yyyy-MM-dd").parse(dateTime.split("T")[0]);
+    DateTime parseDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateTime);
     var inputDate = DateTime.parse(parseDate.toString());
-    var outputFormat = DateFormat('dd MMM, yyyy');
+    var outputFormat = DateFormat('dd/MM/yyyy HH:mm:ss');
     var outputDate = outputFormat.format(inputDate);
     return outputDate;
   }

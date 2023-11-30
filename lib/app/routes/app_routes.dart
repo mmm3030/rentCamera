@@ -21,6 +21,9 @@ abstract class Routes {
   static const ADDRESS = _Paths.ADDRESS;
   static const CARD = _Paths.CARD;
   static const ADDCARD = _Paths.ADDCARD;
+  static const HISTORY = _Paths.HISTORY;
+
+  
 }
 
 abstract class _Paths {
@@ -43,4 +46,5 @@ abstract class _Paths {
   static const ADDRESS = '/address';
   static const CARD = '/card';
   static const ADDCARD = '/addcard';
+  static const HISTORY = '/history';
 }

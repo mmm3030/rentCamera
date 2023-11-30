@@ -17,6 +17,8 @@ import 'package:rent_camera/app/modules/forgotPassword/forgot_binding.dart';
 import 'package:rent_camera/app/modules/forgotPassword/forgot_view.dart';
 import 'package:rent_camera/app/modules/forgotPassword_opt/forgotPassOpt_binding.dart';
 import 'package:rent_camera/app/modules/forgotPassword_opt/forgotPassOpt_view.dart';
+import 'package:rent_camera/app/modules/history/history_binding.dart';
+import 'package:rent_camera/app/modules/history/history_view.dart';
 import 'package:rent_camera/app/modules/home/home_binding.dart';
 import 'package:rent_camera/app/modules/home/home_view.dart';
 import 'package:rent_camera/app/modules/login/login_binding.dart';
@@ -150,6 +152,12 @@ class AppPages {
       name: _Paths.ADDCARD,
       page: () => const AddCardView(),
       binding: AddCardBinding(),
+      transition: Transition.noTransition,
+    ),
+       GetPage(
+      name: _Paths.HISTORY,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
       transition: Transition.noTransition,
     ),
   ];

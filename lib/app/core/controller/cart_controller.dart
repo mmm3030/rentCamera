@@ -131,7 +131,6 @@ class CartController extends GetxController {
         mapDataTmp[cart] = await getProductsByProductId(cart.productId!);
       }
       mapCartData(mapDataTmp);
-      print('${mapCartData.value}');
     } else {}
     update();
   }
@@ -180,8 +179,6 @@ class CartController extends GetxController {
   }
 
   void checkOut() {
-    // print(cardController.listCard.value.isEmpty);
-    // Get.toNamed(Routes.CHECKOUT);
     fetchCheckOut();
   }
 

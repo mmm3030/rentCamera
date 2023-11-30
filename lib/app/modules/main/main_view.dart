@@ -74,6 +74,34 @@ class MainView extends GetView<MainController> {
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: InkWell(
                             onTap: () {
+                              Get.toNamed(Routes.HISTORY);
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.history,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                const Text(
+                                  'Order history',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeights.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: InkWell(
+                            onTap: () {
                               controller.logout();
                             },
                             child: Row(
